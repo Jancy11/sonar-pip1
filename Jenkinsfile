@@ -1,51 +1,52 @@
 pipeline {
-agent any
-environment {
-PYTHON_PATH =
-&#39;C:\\Users\\LENOVO\\AppData\\Local\\Programs\\Python\\Python313;C:\\Users\\LENOVO\\AppDa
-ta\\Local\\Programs\\Python\\Python313\\Scripts&#39;
-}
-stages {
-stage(&#39;Checkout&#39;) {
-steps {
-checkout scm
-}
-}
-stage(&#39;Build&#39;) {
-steps {
-// Set the PATH and install dependencies using pip
-bat &#39;&#39;&#39;
-set PATH=%PYTHON_PATH%;%PATH%
-pip install -r requirements.txt
-&#39;&#39;&#39;
-}
-}
-stage(&#39;SonarQube Analysis&#39;) {
-environment {
-SONAR_TOKEN = credentials(&#39;sonarqube-token&#39;) // Accessing the SonarQube token stored
-in Jenkins credentials
-}
-steps {
-bat &#39;&#39;&#39;
-set PATH=%PYTHON_PATH%;%PATH%
+    agent any
 
-sonar-scanner -Dsonar.projectKey=test110 \
-  -Dsonar.sources=. \
-  -Dsonar.host.url=http://localhost:9000
-  -Dsonar.token=sqp_94fafd3f990492ed4a8d6759ae74ea6a51349feb
-&#39;&#39;&#39;
-}
-}
-}
-post {
-success {
-echo &#39;Pipeline completed successfully&#39;
-}
-failure {
-echo &#39;Pipeline failed&#39;
-}
-always {
-echo &#39;This runs regardless of the result.&#39;
-}
-}
+    environment {
+        PYTHON_PATH = 'C:\\Users\\LENOVO\\AppData\\Local\\Programs\\Python\\Python313;C:\\Users\\LENOVO\\AppData\\Local\\Programs\\Python\\Python313\\Scripts'
+    }
+
+    stages {
+        stage('Checkout') {
+            steps {
+                checkout scm
+            }
+        }
+
+        stage('Build') {
+            steps {
+                // Set the PATH and install dependencies using pip
+                bat '''
+                set PATH=%PYTHON_PATH%;%PATH%
+                pip install -r requirements.txt
+                '''
+            }
+        }
+
+        stage('SonarQube Analysis') {
+            environment {
+                SONAR_TOKEN = credentials('sonarqube-token') // Accessing the SonarQube token stored in Jenkins credentials
+            }
+            steps {
+                bat '''
+                set PATH=%PYTHON_PATH%;%PATH%
+                sonar-scanner -Dsonar.projectKey=test110 ^
+                  -Dsonar.sources=. ^
+                  -Dsonar.host.url=http://localhost:9000 ^
+                  -Dsonar.token=%SONAR_TOKEN%
+                '''
+            }
+        }
+    }
+
+    post {
+        success {
+            echo 'Pipeline completed successfully'
+        }
+        failure {
+            echo 'Pipeline failed'
+        }
+        always {
+            echo 'This runs regardless of the result.'
+        }
+    }
 }
