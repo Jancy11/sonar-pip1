@@ -29,11 +29,10 @@ steps {
 bat &#39;&#39;&#39;
 set PATH=%PYTHON_PATH%;%PATH%
 
-sonar-scanner -Dsonar.projectKey=github_trial1 \
--Dsonar.projectName=Trial1 \
--Dsonar.sources=. \
--Dsonar.host.url=http://localhost:9000 \
--Dsonar.token=%SONAR_TOKEN%
+sonar-scanner -Dsonar.projectKey=test110 \
+  -Dsonar.sources=. \
+  -Dsonar.host.url=http://localhost:9000
+  -Dsonar.token=sqp_94fafd3f990492ed4a8d6759ae74ea6a51349feb
 &#39;&#39;&#39;
 }
 }
