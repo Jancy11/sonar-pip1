@@ -24,7 +24,7 @@ pipeline {
 
         stage('SonarQube Analysis') {
             environment {
-                SONAR_TOKEN = credentials('sonarqube-token') // Accessing the SonarQube token stored in Jenkins credentials
+                SONAR_TOKEN = credentials('sonar-token') // Accessing the SonarQube token stored in Jenkins credentials
             }
             steps {
                 bat '''
@@ -32,7 +32,7 @@ pipeline {
                 sonar-scanner -Dsonar.projectKey=test110 ^
                   -Dsonar.sources=. ^
                   -Dsonar.host.url=http://localhost:9000 ^
-                  -Dsonar.token=%sonar-token%
+                  -Dsonar.token=%SONAR_TOKEN%
                 '''
             }
         }
